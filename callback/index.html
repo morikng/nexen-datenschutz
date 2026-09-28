@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nexen Anmeldung</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<h1>Anmeldung</h1>
+<div id="out"></div>
+<script>
+  // Shows the ?code=... from the login redirect. Sends it nowhere – copy it into the terminal.
+  var p = new URLSearchParams(location.search);
+  var code = p.get("code");
+  var err = p.get("error_description") || p.get("error");
+  var out = document.getElementById("out");
+
+  if (code) {
+    out.innerHTML =
+      '<p>Fertig. Diesen Code kopieren und im Terminal einfügen:</p>' +
+      '<code id="c"></code>' +
+      '<button id="b">Code kopieren</button>' +
+      '<p class="hint">Danach kann dieser Tab geschlossen werden. Der Code gilt nur wenige Minuten.</p>';
+    document.getElementById("c").textContent = code;
+    document.getElementById("b").onclick = function () {
+      navigator.clipboard.writeText(code).then(function () {
+        document.getElementById("b").textContent = "Kopiert";
+      });
+    };
+  } else if (err) {
+    out.innerHTML = '<p class="err">Die Anmeldung wurde abgebrochen:</p><code></code>';
+    out.querySelector("code").textContent = err;
+  } else {
+    out.innerHTML = '<p class="hint">Diese Seite wird nur während einer Anmeldung aufgerufen. ' +
+                    'Direkt geöffnet steht hier nichts.</p>';
+  }
+</script>
+</body>
+</html>
